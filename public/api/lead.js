@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ success: false, error: "Method not allowed" });
   }
 
   try {
@@ -37,10 +37,7 @@ export default async function handler(req, res) {
             "str:cm:last-name": data.lastName || "",
             "str:cm:email": data.email || "",
             "phn:cm:phone": { c: phoneCode, n: phoneNumber },
-
-            // keep same field, but send CODE instead of country name
             "str:cm:country": countryCode,
-
             "str:cm:answers": JSON.stringify({
               toolUsed: toolName,
               inputs: {
@@ -49,7 +46,7 @@ export default async function handler(req, res) {
                 incomeValue: inputs.incomeValue ?? null,
                 incomePeriod: inputs.incomePeriod ?? "year",
                 compounding: inputs.compounding ?? "annual",
-                years: inputs.years ?? 10,
+                years: inputs.years ?? 10
               },
               results: {
                 annualIncome: results.annualIncome ?? 0,
@@ -57,31 +54,31 @@ export default async function handler(req, res) {
                 solvedField: results.solvedField ?? "",
                 totalProjectedValue: results.totalProjectedValue ?? 0,
                 totalInterestEarned: results.totalInterestEarned ?? 0,
-                chartPoints: results.chartPoints ?? [],
-              },
-            }),
+                chartPoints: results.chartPoints ?? []
+              }
+            })
           },
           fields: {
-            "str::email": data.email || "",
+            "str::email": data.email || ""
           },
           location: {
             source_ip:
               req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || null,
             custom: null,
-            address: null,
-          },
-        },
+            address: null
+          }
+        }
       ],
-      merge_by: ["str::email"],
+      merge_by: ["str::email"]
     };
 
     const orttoResp = await fetch("https://api.eu.ap3api.com/v1/person/merge", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Api-Key": process.env.ORTTO_API_KEY,
+        "X-Api-Key": process.env.ORTTO_API_KEY
       },
-      body: JSON.stringify(orttoBody),
+      body: JSON.stringify(orttoBody)
     });
 
     const orttoText = await orttoResp.text();
@@ -91,19 +88,19 @@ export default async function handler(req, res) {
       return res.status(500).json({
         success: false,
         error: "Ortto merge failed",
-        details: orttoText,
+        details: orttoText
       });
     }
 
     return res.status(200).json({
       success: true,
-      ortto: orttoText,
+      ortto: orttoText
     });
   } catch (error) {
     console.error("Lead API error:", error);
     return res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : String(error)
     });
   }
 }
@@ -119,13 +116,13 @@ function splitPhone(raw) {
   if (match) {
     return {
       phoneCode: match[1],
-      phoneNumber: match[2] || "",
+      phoneNumber: match[2] || ""
     };
   }
 
   return {
     phoneCode: "",
-    phoneNumber: cleaned,
+    phoneNumber: cleaned
   };
 }
 
@@ -153,7 +150,7 @@ function getCountryCode(countryName) {
     "Netherlands": "NL",
     "Switzerland": "CH",
     "Ireland": "IE",
-    "New Zealand": "NZ",
+    "New Zealand": "NZ"
   };
 
   return map[countryName] || "";
