@@ -1,196 +1,727 @@
-<style>
-  :root {
-    --hw-bg: #f4fbfa;
-    --hw-surface: #ffffff;
-    --hw-primary: #0f766e;
-    --hw-primary-dark: #0b5f59;
-    --hw-primary-soft: #d9f3f0;
-    --hw-accent: #14b8a6;
-    --hw-text: #163434;
-    --hw-muted: #5b7777;
-    --hw-border: #cfe7e5;
-    --hw-success: #0f766e;
-    --hw-shadow: 0 12px 30px rgba(15, 118, 110, 0.12);
-    --hw-radius: 18px;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Investment Income Calculator</title>
 
-  body {
-    margin: 0;
-    font-family: Inter, Arial, sans-serif;
-    background: linear-gradient(180deg, #f7fcfb 0%, #eef8f7 100%);
-    color: var(--hw-text);
-  }
-
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 24px;
-  }
-
-  .hero-card,
-  .calc-card,
-  .form-card,
-  .results-card {
-    background: var(--hw-surface);
-    border: 1px solid var(--hw-border);
-    border-radius: var(--hw-radius);
-    box-shadow: var(--hw-shadow);
-  }
-
-  .hero-card {
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-
-  .brand-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-
-  .brand-logo {
-    height: 44px;
-    width: auto;
-    display: block;
-  }
-
-  .brand-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0;
-    color: var(--hw-primary-dark);
-  }
-
-  .brand-subtitle {
-    margin: 8px 0 0;
-    color: var(--hw-muted);
-    line-height: 1.6;
-  }
-
-  .calc-card,
-  .form-card,
-  .results-card {
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-
-  .section-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 16px;
-    color: var(--hw-primary-dark);
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
-  label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--hw-text);
-  }
-
-  input,
-  select {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 1px solid var(--hw-border);
-    font-size: 15px;
-    box-sizing: border-box;
-    outline: none;
-    background: #fff;
-  }
-
-  input:focus,
-  select:focus {
-    border-color: var(--hw-accent);
-    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.14);
-  }
-
-  .btn {
-    border: none;
-    border-radius: 12px;
-    padding: 13px 18px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 700;
-    transition: 0.2s ease;
-  }
-
-  .btn-primary {
-    background: var(--hw-primary);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: var(--hw-primary-dark);
-  }
-
-  .btn-secondary {
-    background: var(--hw-primary-soft);
-    color: var(--hw-primary-dark);
-  }
-
-  .hidden {
-    display: none !important;
-  }
-
-  .fade-in {
-    animation: fadeIn 0.35s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
+  <style>
+    :root {
+      --hw-bg: #f4fbfa;
+      --hw-surface: #ffffff;
+      --hw-primary: #0f766e;
+      --hw-primary-dark: #0b5f59;
+      --hw-primary-soft: #d9f3f0;
+      --hw-accent: #14b8a6;
+      --hw-text: #163434;
+      --hw-muted: #5b7777;
+      --hw-border: #cfe7e5;
+      --hw-shadow: 0 12px 30px rgba(15, 118, 110, 0.12);
+      --hw-radius: 18px;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    * {
+      box-sizing: border-box;
     }
-  }
 
-  .summary-box {
-    background: #f7fffe;
-    border: 1px solid var(--hw-border);
-    border-radius: 14px;
-    padding: 16px;
-    margin-top: 14px;
-  }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7fcfb 0%, #eef8f7 100%);
+      color: var(--hw-text);
+    }
 
-  .result-number {
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--hw-primary-dark);
-    margin: 6px 0;
-  }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
 
-  canvas {
-    width: 100%;
-    max-width: 100%;
-  }
+    .hero-card,
+    .calc-card,
+    .form-card,
+    .results-card {
+      background: var(--hw-surface);
+      border: 1px solid var(--hw-border);
+      border-radius: var(--hw-radius);
+      box-shadow: var(--hw-shadow);
+    }
 
-  @media (max-width: 900px) {
-    .grid,
-    .grid-2 {
-      grid-template-columns: 1fr;
+    .hero-card {
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand-logo {
+      height: 44px;
+      width: auto;
+      display: block;
     }
 
     .brand-title {
-      font-size: 24px;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--hw-primary-dark);
     }
-  }
-</style>
+
+    .brand-subtitle {
+      margin: 8px 0 0;
+      color: var(--hw-muted);
+      line-height: 1.6;
+    }
+
+    .calc-card,
+    .form-card,
+    .results-card {
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--hw-primary-dark);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--hw-text);
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--hw-border);
+      font-size: 15px;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--hw-accent);
+      box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.14);
+    }
+
+    .helper-text {
+      font-size: 13px;
+      color: var(--hw-muted);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 18px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--hw-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--hw-primary-dark);
+    }
+
+    .btn-secondary {
+      background: var(--hw-primary-soft);
+      color: var(--hw-primary-dark);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .summary-box {
+      background: #f7fffe;
+      border: 1px solid var(--hw-border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .summary-label {
+      font-size: 14px;
+      color: var(--hw-muted);
+      margin-bottom: 6px;
+    }
+
+    .result-number {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--hw-primary-dark);
+      margin: 0;
+    }
+
+    .chart-wrap {
+      margin-top: 24px;
+      padding: 16px;
+      background: #f9fffe;
+      border-radius: 16px;
+      border: 1px solid var(--hw-border);
+    }
+
+    .status-message {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--hw-primary-dark);
+      font-weight: 600;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 100%;
+      display: block;
+    }
+
+    @media (max-width: 900px) {
+      .grid,
+      .grid-2,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero-card">
+      <div class="brand-row">
+        <img src="/hoxton-logo.png" alt="Hoxton Wealth" class="brand-logo" />
+        <div>
+          <h1 class="brand-title">Investment Income Calculator</h1>
+          <p class="brand-subtitle">
+            Enter any two values to calculate the third, then submit your details to unlock your personalised projection.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-card" id="calculatorCard">
+      <h2 class="section-title">Calculator Inputs</h2>
+
+      <div class="grid">
+        <div>
+          <label for="yieldPercent">Yield (%)</label>
+          <input id="yieldPercent" type="number" step="0.01" placeholder="e.g. 7.5" />
+          <div class="helper-text">Enter the expected annual yield percentage.</div>
+        </div>
+
+        <div>
+          <label for="investmentAmount">Investment Amount ($)</label>
+          <input id="investmentAmount" type="number" step="0.01" placeholder="e.g. 100000" />
+          <div class="helper-text">Enter the lump sum investment amount.</div>
+        </div>
+
+        <div>
+          <label for="incomeValue">Income ($)</label>
+          <input id="incomeValue" type="number" step="0.01" placeholder="e.g. 7500" />
+          <div class="helper-text">Enter annual or monthly income depending on the selected period.</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:16px;">
+        <div>
+          <label for="incomePeriod">Income Period</label>
+          <select id="incomePeriod">
+            <option value="year">Year</option>
+            <option value="month">Month</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="compounding">Compounding</label>
+          <select id="compounding">
+            <option value="annual">Annual</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label for="years">Projection Years</label>
+        <input id="years" type="number" min="1" max="30" value="10" />
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="calculateBtn">Continue</button>
+      </div>
+
+      <div class="status-message" id="calcStatus"></div>
+    </div>
+
+    <div class="form-card hidden fade-in" id="leadFormCard">
+      <h2 class="section-title">Enter Your Details to View the Result</h2>
+
+      <div class="grid-2">
+        <div>
+          <label for="firstName">First Name</label>
+          <input id="firstName" type="text" />
+        </div>
+
+        <div>
+          <label for="lastName">Last Name</label>
+          <input id="lastName" type="text" />
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:16px;">
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" />
+        </div>
+
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" type="text" placeholder="+971501234567" />
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label for="country">Country</label>
+        <select id="country">
+          <option value="">Select country</option>
+          <option>United Arab Emirates</option>
+          <option>Saudi Arabia</option>
+          <option>Qatar</option>
+          <option>Kuwait</option>
+          <option>Bahrain</option>
+          <option>Oman</option>
+          <option>United Kingdom</option>
+          <option>United States</option>
+          <option>Canada</option>
+          <option>Australia</option>
+          <option>India</option>
+          <option>Pakistan</option>
+          <option>South Africa</option>
+          <option>Singapore</option>
+          <option>Hong Kong</option>
+          <option>Germany</option>
+          <option>France</option>
+          <option>Spain</option>
+          <option>Italy</option>
+          <option>Netherlands</option>
+          <option>Switzerland</option>
+          <option>Ireland</option>
+          <option>New Zealand</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="submitLeadBtn">Submit & Show Results</button>
+      </div>
+
+      <div class="status-message" id="formStatus"></div>
+    </div>
+
+    <div class="results-card hidden fade-in" id="resultsCard">
+      <h2 class="section-title">Your Results</h2>
+
+      <div class="summary-grid">
+        <div class="summary-box">
+          <div class="summary-label">Annual Income</div>
+          <p class="result-number" id="annualIncomeOut">$0</p>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-label">Monthly Income</div>
+          <p class="result-number" id="monthlyIncomeOut">$0</p>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-label">Total Projected Value</div>
+          <p class="result-number" id="projectedValueOut">$0</p>
+        </div>
+      </div>
+
+      <div class="summary-grid" style="margin-top:16px;">
+        <div class="summary-box">
+          <div class="summary-label">Interest Earned</div>
+          <p class="result-number" id="interestEarnedOut">$0</p>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-label">Solved Field</div>
+          <p class="result-number" id="solvedFieldOut">—</p>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-label">Projection Years</div>
+          <p class="result-number" id="projectionYearsOut">0</p>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="projectionChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const countryCodeMap = {
+      "United Arab Emirates": "AE",
+      "Saudi Arabia": "SA",
+      "Qatar": "QA",
+      "Kuwait": "KW",
+      "Bahrain": "BH",
+      "Oman": "OM",
+      "United Kingdom": "GB",
+      "United States": "US",
+      "Canada": "CA",
+      "Australia": "AU",
+      "India": "IN",
+      "Pakistan": "PK",
+      "South Africa": "ZA",
+      "Singapore": "SG",
+      "Hong Kong": "HK",
+      "Germany": "DE",
+      "France": "FR",
+      "Spain": "ES",
+      "Italy": "IT",
+      "Netherlands": "NL",
+      "Switzerland": "CH",
+      "Ireland": "IE",
+      "New Zealand": "NZ"
+    };
+
+    let pendingCalculation = null;
+
+    const calculateBtn = document.getElementById("calculateBtn");
+    const submitLeadBtn = document.getElementById("submitLeadBtn");
+    const leadFormCard = document.getElementById("leadFormCard");
+    const resultsCard = document.getElementById("resultsCard");
+    const calcStatus = document.getElementById("calcStatus");
+    const formStatus = document.getElementById("formStatus");
+
+    calculateBtn.addEventListener("click", () => {
+      calcStatus.textContent = "";
+
+      const calc = calculateInvestmentIncome();
+      if (!calc.ok) {
+        calcStatus.textContent = calc.error;
+        return;
+      }
+
+      pendingCalculation = calc;
+      leadFormCard.classList.remove("hidden");
+      resultsCard.classList.add("hidden");
+
+      leadFormCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      notifyParentHeight();
+    });
+
+    submitLeadBtn.addEventListener("click", async () => {
+      formStatus.textContent = "";
+
+      if (!pendingCalculation) {
+        formStatus.textContent = "Please complete the calculator first.";
+        return;
+      }
+
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const country = document.getElementById("country").value;
+
+      if (!firstName || !lastName || !email || !phone || !country) {
+        formStatus.textContent = "Please fill all form fields.";
+        return;
+      }
+
+      const payload = {
+        firstName,
+        lastName,
+        email,
+        phone,
+        country,
+        countryCode: countryCodeMap[country] || "",
+        inputs: pendingCalculation.inputs,
+        results: pendingCalculation.results
+      };
+
+      try {
+        submitLeadBtn.disabled = true;
+        submitLeadBtn.textContent = "Submitting...";
+
+        const resp = await fetch("/api/lead", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await resp.json();
+
+        if (!resp.ok || !data.success) {
+          formStatus.textContent = "Something went wrong while submitting the form.";
+          console.error(data);
+          return;
+        }
+
+        leadFormCard.classList.add("hidden");
+        resultsCard.classList.remove("hidden");
+
+        renderResults(pendingCalculation.results, pendingCalculation.inputs);
+        drawProjectionChart(pendingCalculation.results.chartPoints);
+
+        resultsCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        notifyParentHeight();
+      } catch (error) {
+        console.error(error);
+        formStatus.textContent = "Submission failed.";
+      } finally {
+        submitLeadBtn.disabled = false;
+        submitLeadBtn.textContent = "Submit & Show Results";
+      }
+    });
+
+    function calculateInvestmentIncome() {
+      const yieldPercent = parseFloat(document.getElementById("yieldPercent").value);
+      const investmentAmount = parseFloat(document.getElementById("investmentAmount").value);
+      const incomeValue = parseFloat(document.getElementById("incomeValue").value);
+      const incomePeriod = document.getElementById("incomePeriod").value;
+      const compounding = document.getElementById("compounding").value;
+      const years = parseInt(document.getElementById("years").value || "10", 10);
+
+      const values = [yieldPercent, investmentAmount, incomeValue].filter(v => !isNaN(v));
+      if (values.length < 2) {
+        return {
+          ok: false,
+          error: "Please fill at least 2 of the 3 main inputs."
+        };
+      }
+
+      let annualIncome = incomeValue;
+      if (!isNaN(incomeValue) && incomePeriod === "month") {
+        annualIncome = incomeValue * 12;
+      }
+
+      let finalYield = yieldPercent;
+      let finalAmount = investmentAmount;
+      let finalAnnualIncome = annualIncome;
+      let solvedField = "";
+
+      if (isNaN(finalYield)) {
+        if (!finalAmount || !finalAnnualIncome) {
+          return { ok: false, error: "Amount and income are required to calculate yield." };
+        }
+        finalYield = (finalAnnualIncome / finalAmount) * 100;
+        solvedField = "yield";
+      } else if (isNaN(finalAmount)) {
+        if (!finalYield || !finalAnnualIncome) {
+          return { ok: false, error: "Yield and income are required to calculate amount." };
+        }
+        finalAmount = finalAnnualIncome / (finalYield / 100);
+        solvedField = "investmentAmount";
+      } else if (isNaN(incomeValue)) {
+        finalAnnualIncome = finalAmount * (finalYield / 100);
+        solvedField = "income";
+      } else {
+        solvedField = "none";
+      }
+
+      const n =
+        compounding === "monthly" ? 12 :
+        compounding === "quarterly" ? 4 : 1;
+
+      const rate = finalYield / 100;
+      const totalProjectedValue = finalAmount * Math.pow(1 + rate / n, n * years);
+      const totalInterestEarned = totalProjectedValue - finalAmount;
+      const monthlyIncome = finalAnnualIncome / 12;
+
+      const chartPoints = [];
+      for (let year = 1; year <= years; year++) {
+        const value = finalAmount * Math.pow(1 + rate / n, n * year);
+        chartPoints.push({
+          year,
+          value: Number(value.toFixed(2))
+        });
+      }
+
+      return {
+        ok: true,
+        inputs: {
+          yieldPercent: Number(finalYield.toFixed(2)),
+          investmentAmount: Number(finalAmount.toFixed(2)),
+          incomeValue: Number(finalAnnualIncome.toFixed(2)),
+          incomePeriod,
+          compounding,
+          years
+        },
+        results: {
+          annualIncome: Number(finalAnnualIncome.toFixed(2)),
+          monthlyIncome: Number(monthlyIncome.toFixed(2)),
+          solvedField,
+          totalProjectedValue: Number(totalProjectedValue.toFixed(2)),
+          totalInterestEarned: Number(totalInterestEarned.toFixed(2)),
+          chartPoints
+        }
+      };
+    }
+
+    function renderResults(results, inputs) {
+      document.getElementById("annualIncomeOut").textContent = formatCurrency(results.annualIncome);
+      document.getElementById("monthlyIncomeOut").textContent = formatCurrency(results.monthlyIncome);
+      document.getElementById("projectedValueOut").textContent = formatCurrency(results.totalProjectedValue);
+      document.getElementById("interestEarnedOut").textContent = formatCurrency(results.totalInterestEarned);
+      document.getElementById("solvedFieldOut").textContent = results.solvedField || "none";
+      document.getElementById("projectionYearsOut").textContent = String(inputs.years || 0);
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(value || 0);
+    }
+
+    function drawProjectionChart(points) {
+      const canvas = document.getElementById("projectionChart");
+      const ctx = canvas.getContext("2d");
+
+      const displayWidth = canvas.parentElement.clientWidth - 10;
+      const displayHeight = 260;
+
+      canvas.width = displayWidth * 2;
+      canvas.height = displayHeight * 2;
+      canvas.style.width = displayWidth + "px";
+      canvas.style.height = displayHeight + "px";
+
+      ctx.setTransform(2, 0, 0, 2, 0, 0);
+      ctx.clearRect(0, 0, displayWidth, displayHeight);
+
+      if (!points || !points.length) return;
+
+      const padding = 24;
+      const w = displayWidth;
+      const h = displayHeight;
+      const maxValue = Math.max(...points.map(p => p.value));
+
+      ctx.strokeStyle = "#cfe7e5";
+      ctx.lineWidth = 1;
+
+      for (let i = 0; i < 5; i++) {
+        const y = padding + ((h - padding * 2) / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(w - padding, y);
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#0f766e";
+
+      points.forEach((point, index) => {
+        const x = padding + (index / Math.max(points.length - 1, 1)) * (w - padding * 2);
+        const y = h - padding - (point.value / maxValue) * (h - padding * 2);
+
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+
+      ctx.stroke();
+
+      points.forEach((point, index) => {
+        const x = padding + (index / Math.max(points.length - 1, 1)) * (w - padding * 2);
+        const y = h - padding - (point.value / maxValue) * (h - padding * 2);
+
+        ctx.beginPath();
+        ctx.fillStyle = "#14b8a6";
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function notifyParentHeight() {
+      if (typeof window !== "undefined" && window.parent) {
+        setTimeout(() => {
+          window.parent.postMessage(
+            {
+              type: "resize",
+              height: document.body.scrollHeight + 40
+            },
+            "*"
+          );
+        }, 150);
+      }
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      notifyParentHeight();
+    });
+    resizeObserver.observe(document.body);
+
+    window.addEventListener("load", notifyParentHeight);
+  </script>
+</body>
+</html>
