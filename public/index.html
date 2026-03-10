@@ -1,1 +1,196 @@
+<style>
+  :root {
+    --hw-bg: #f4fbfa;
+    --hw-surface: #ffffff;
+    --hw-primary: #0f766e;
+    --hw-primary-dark: #0b5f59;
+    --hw-primary-soft: #d9f3f0;
+    --hw-accent: #14b8a6;
+    --hw-text: #163434;
+    --hw-muted: #5b7777;
+    --hw-border: #cfe7e5;
+    --hw-success: #0f766e;
+    --hw-shadow: 0 12px 30px rgba(15, 118, 110, 0.12);
+    --hw-radius: 18px;
+  }
 
+  body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: linear-gradient(180deg, #f7fcfb 0%, #eef8f7 100%);
+    color: var(--hw-text);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .hero-card,
+  .calc-card,
+  .form-card,
+  .results-card {
+    background: var(--hw-surface);
+    border: 1px solid var(--hw-border);
+    border-radius: var(--hw-radius);
+    box-shadow: var(--hw-shadow);
+  }
+
+  .hero-card {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .brand-logo {
+    height: 44px;
+    width: auto;
+    display: block;
+  }
+
+  .brand-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--hw-primary-dark);
+  }
+
+  .brand-subtitle {
+    margin: 8px 0 0;
+    color: var(--hw-muted);
+    line-height: 1.6;
+  }
+
+  .calc-card,
+  .form-card,
+  .results-card {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: var(--hw-primary-dark);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--hw-text);
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--hw-border);
+    font-size: 15px;
+    box-sizing: border-box;
+    outline: none;
+    background: #fff;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: var(--hw-accent);
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.14);
+  }
+
+  .btn {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 18px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    transition: 0.2s ease;
+  }
+
+  .btn-primary {
+    background: var(--hw-primary);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--hw-primary-dark);
+  }
+
+  .btn-secondary {
+    background: var(--hw-primary-soft);
+    color: var(--hw-primary-dark);
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.35s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .summary-box {
+    background: #f7fffe;
+    border: 1px solid var(--hw-border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 14px;
+  }
+
+  .result-number {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--hw-primary-dark);
+    margin: 6px 0;
+  }
+
+  canvas {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .grid,
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
+
+    .brand-title {
+      font-size: 24px;
+    }
+  }
+</style>
