@@ -27,11 +27,24 @@ export default async function handler(req, res) {
             "phn:cm:phone": { c: "", n: data.phone || "" },
             "str:cm:country": countryCode,
             "str:cm:answers": JSON.stringify({
-              toolUsed: "Investment Income Calculator",
-              calculatorInputs: data.inputs || {},
-              calculatorResults: data.results || {},
-              riskAnswers: data.riskAnswers || {}
-            })
+  tool: "Investment Income Calculator",
+  in: {
+    y: data.inputs?.yieldPercent ?? null,
+    a: data.inputs?.investmentAmount ?? null,
+    i: data.inputs?.incomeValue ?? null,
+    p: data.inputs?.incomePeriod ?? null,
+    c: data.inputs?.compounding ?? null,
+    yrs: data.inputs?.years ?? null
+  },
+  out: {
+    ai: data.results?.annualIncome ?? null,
+    mi: data.results?.monthlyIncome ?? null,
+    sf: data.results?.solvedField ?? null,
+    tpv: data.results?.totalProjectedValue ?? null,
+    tie: data.results?.totalInterestEarned ?? null
+  },
+  risk: data.riskAnswers || {}
+})
           },
           fields: {
             "str::email": data.email || ""
