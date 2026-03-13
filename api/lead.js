@@ -21,9 +21,6 @@ export default async function handler(req, res) {
             "str:cm:country": data.country || "",
             "str:cm:answers": "Investment Income Calculator"
           },
-          fields: {
-            "str::email": data.email || ""
-          }
         }
       ],
       merge_by: ["str::email"]
