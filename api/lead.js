@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     const orttoBody = {
       activities: [
         {
-          activity_id: "act:cm:magnet-form-captured",
+          activity_id: "website_form_submit",
           attributes: {
             "str:cm:first-name": data.firstName || "",
             "str:cm:last-name": data.lastName || "",
