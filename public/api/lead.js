@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -8,10 +9,11 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== "POST") {
-    return res.status(405).json({ success: false, error: "Method not allowed" });
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
+
     const data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
 
     const toolName = "Investment Income Calculator";
@@ -25,9 +27,6 @@ export default async function handler(req, res) {
     const rawPhone = String(data.phone || "").trim();
     const { phoneCode, phoneNumber } = splitPhone(rawPhone);
 
-    const results = data.results || {};
-    const inputs = data.inputs || {};
-
     const orttoBody = {
       activities: [
         {
@@ -38,29 +37,21 @@ export default async function handler(req, res) {
             "str:cm:email": data.email || "",
             "phn:cm:phone": { c: phoneCode, n: phoneNumber },
             "str:cm:country": countryCode,
+
             "str:cm:answers": JSON.stringify({
               toolUsed: toolName,
-              inputs: {
-                yieldPercent: inputs.yieldPercent ?? null,
-                investmentAmount: inputs.investmentAmount ?? null,
-                incomeValue: inputs.incomeValue ?? null,
-                incomePeriod: inputs.incomePeriod ?? "year",
-                compounding: inputs.compounding ?? "annual",
-                years: inputs.years ?? 10
-              },
-              results: {
-                annualIncome: results.annualIncome ?? 0,
-                monthlyIncome: results.monthlyIncome ?? 0,
-                solvedField: results.solvedField ?? "",
-                totalProjectedValue: results.totalProjectedValue ?? 0,
-                totalInterestEarned: results.totalInterestEarned ?? 0,
-                chartPoints: results.chartPoints ?? []
-              }
+
+              calculatorInputs: data.inputs || {},
+              calculatorResults: data.results || {},
+
+              riskAnswers: data.riskAnswers || {}
             })
           },
+
           fields: {
             "str::email": data.email || ""
           },
+
           location: {
             source_ip:
               req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || null,
@@ -69,6 +60,7 @@ export default async function handler(req, res) {
           }
         }
       ],
+
       merge_by: ["str::email"]
     };
 
@@ -84,73 +76,50 @@ export default async function handler(req, res) {
     const orttoText = await orttoResp.text();
 
     if (!orttoResp.ok) {
-      console.error("Ortto merge failed", orttoResp.status, orttoText);
-      return res.status(500).json({
-        success: false,
-        error: "Ortto merge failed",
-        details: orttoText
-      });
+      console.error("Ortto error:", orttoText);
+      return res.status(500).json({ error: "Ortto failed", details: orttoText });
     }
 
     return res.status(200).json({
-      success: true,
-      ortto: orttoText
+      success: true
     });
+
   } catch (error) {
-    console.error("Lead API error:", error);
-    return res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : String(error)
-    });
+    console.error("API error:", error);
+    return res.status(500).json({ error: "Server error" });
   }
 }
 
 function splitPhone(raw) {
-  if (!raw) {
-    return { phoneCode: "", phoneNumber: "" };
-  }
+  if (!raw) return { phoneCode: "", phoneNumber: "" };
 
-  const cleaned = raw.replace(/\s+/g, "");
-  const match = cleaned.match(/^(\+\d{1,4})(.*)$/);
+  const match = raw.match(/^(\+\d{1,4})(.*)$/);
 
   if (match) {
     return {
       phoneCode: match[1],
-      phoneNumber: match[2] || ""
+      phoneNumber: match[2]
     };
   }
 
   return {
     phoneCode: "",
-    phoneNumber: cleaned
+    phoneNumber: raw
   };
 }
 
 function getCountryCode(countryName) {
+
   const map = {
     "United Arab Emirates": "AE",
     "Saudi Arabia": "SA",
-    "Qatar": "QA",
-    "Kuwait": "KW",
-    "Bahrain": "BH",
-    "Oman": "OM",
     "United Kingdom": "GB",
     "United States": "US",
+    "India": "IN",
     "Canada": "CA",
     "Australia": "AU",
-    "India": "IN",
-    "Pakistan": "PK",
-    "South Africa": "ZA",
-    "Singapore": "SG",
-    "Hong Kong": "HK",
     "Germany": "DE",
-    "France": "FR",
-    "Spain": "ES",
-    "Italy": "IT",
-    "Netherlands": "NL",
-    "Switzerland": "CH",
-    "Ireland": "IE",
-    "New Zealand": "NZ"
+    "France": "FR"
   };
 
   return map[countryName] || "";
