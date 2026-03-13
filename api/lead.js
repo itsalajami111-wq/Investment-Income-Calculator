@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -13,7 +12,6 @@ export default async function handler(req, res) {
   }
 
   try {
-
     const data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
 
     const countryCode = getCountryCode(data.country);
@@ -22,33 +20,34 @@ export default async function handler(req, res) {
       activities: [
         {
           activity_id: "act:cm:magnet-form-captured",
-
           attributes: {
-            "str:cm:first-name": data.firstName,
-            "str:cm:last-name": data.lastName,
-            "str:cm:email": data.email,
-            "phn:cm:phone": { c: "", n: data.phone },
-
+            "str:cm:first-name": data.firstName || "",
+            "str:cm:last-name": data.lastName || "",
+            "str:cm:email": data.email || "",
+            "phn:cm:phone": { c: "", n: data.phone || "" },
             "str:cm:country": countryCode,
-
             "str:cm:answers": JSON.stringify({
               toolUsed: "Investment Income Calculator",
-              calculatorInputs: data.inputs,
-              calculatorResults: data.results,
-              riskAnswers: data.riskAnswers
+              calculatorInputs: data.inputs || {},
+              calculatorResults: data.results || {},
+              riskAnswers: data.riskAnswers || {}
             })
           },
-
           fields: {
-            "str::email": data.email
+            "str::email": data.email || ""
+          },
+          location: {
+            source_ip:
+              req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || null,
+            custom: null,
+            address: null
           }
         }
       ],
-
       merge_by: ["str::email"]
     };
 
-    const orttoResp = await fetch("https://api.eu.ap3api.com/v1/person/merge", {
+    const orttoResp = await fetch("https://api.eu.ap3api.com/v1/activities/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,29 +59,42 @@ export default async function handler(req, res) {
     const text = await orttoResp.text();
 
     if (!orttoResp.ok) {
+      console.error("Ortto error:", text);
       return res.status(500).json({ error: text });
     }
 
     return res.status(200).json({ success: true });
-
   } catch (err) {
-
+    console.error("API error:", err);
     return res.status(500).json({ error: err.message });
-
   }
-
 }
 
 function getCountryCode(name) {
-
   const map = {
     "United Arab Emirates": "AE",
     "Saudi Arabia": "SA",
+    "Qatar": "QA",
+    "Kuwait": "KW",
+    "Bahrain": "BH",
+    "Oman": "OM",
     "United Kingdom": "GB",
     "United States": "US",
-    "India": "IN",
     "Canada": "CA",
-    "Australia": "AU"
+    "Australia": "AU",
+    "India": "IN",
+    "Pakistan": "PK",
+    "South Africa": "ZA",
+    "Singapore": "SG",
+    "Hong Kong": "HK",
+    "Germany": "DE",
+    "France": "FR",
+    "Spain": "ES",
+    "Italy": "IT",
+    "Netherlands": "NL",
+    "Switzerland": "CH",
+    "Ireland": "IE",
+    "New Zealand": "NZ"
   };
 
   return map[name] || "";
