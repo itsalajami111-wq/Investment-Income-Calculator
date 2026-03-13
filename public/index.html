@@ -229,6 +229,21 @@
       font-weight: 600;
     }
 
+    .question-card {
+      background: #f7fffe;
+      border: 1px solid var(--hw-border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .question-card p {
+      margin: 0 0 12px;
+      font-weight: 600;
+      color: var(--hw-text);
+      line-height: 1.5;
+    }
+
     canvas {
       width: 100%;
       max-width: 100%;
@@ -256,7 +271,7 @@
         <div>
           <h1 class="brand-title">Investment Income Calculator</h1>
           <p class="brand-subtitle">
-            Enter any two values to calculate the third, then submit your details to unlock your personalised projection.
+            Enter any two values to calculate the third, then complete your details and risk questionnaire to unlock your personalised projection.
           </p>
         </div>
       </div>
@@ -317,7 +332,7 @@
     </div>
 
     <div class="form-card hidden fade-in" id="leadFormCard">
-      <h2 class="section-title">Enter Your Details to View the Result</h2>
+      <h2 class="section-title">Enter Your Details</h2>
 
       <div class="grid-2">
         <div>
@@ -374,10 +389,149 @@
       </div>
 
       <div class="actions">
-        <button class="btn btn-primary" id="submitLeadBtn">Submit & Show Results</button>
+        <button class="btn btn-primary" id="continueToRiskBtn">Continue to Risk Questionnaire</button>
       </div>
 
       <div class="status-message" id="formStatus"></div>
+    </div>
+
+    <div class="form-card hidden fade-in" id="riskFormCard">
+      <h2 class="section-title">Risk Questionnaire</h2>
+
+      <div class="question-card">
+        <p>1. As I withdraw money from these investments, I plan to spend it over a period of...</p>
+        <select id="q1">
+          <option value="">Select</option>
+          <option value="1">2 years or less</option>
+          <option value="2">3-5 years</option>
+          <option value="3">6-10 years</option>
+          <option value="4">11-15 years</option>
+          <option value="5">15+ years</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>2. When making a long-term investment, I plan to keep the money invested for...</p>
+        <select id="q2">
+          <option value="">Select</option>
+          <option value="1">1-2 years</option>
+          <option value="2">3-4 years</option>
+          <option value="3">5-6 years</option>
+          <option value="4">7-8 years</option>
+          <option value="5">8+ years</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>3. When it comes to investing in stock or bond mutual funds or ETFs, I would describe myself as...</p>
+        <select id="q3">
+          <option value="">Select</option>
+          <option value="1">Very inexperienced</option>
+          <option value="2">Somewhat inexperienced</option>
+          <option value="3">Average</option>
+          <option value="4">Experienced</option>
+          <option value="5">Very experienced</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>4. My current and future income sources are...</p>
+        <select id="q4">
+          <option value="">Select</option>
+          <option value="1">Very unstable</option>
+          <option value="2">Somewhat unstable</option>
+          <option value="3">Moderately stable</option>
+          <option value="4">Stable</option>
+          <option value="5">Very stable</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>5. I plan to begin taking money from my investments in...</p>
+        <select id="q5">
+          <option value="">Select</option>
+          <option value="0">1 year or less</option>
+          <option value="1">1-2 years</option>
+          <option value="2">3-5 years</option>
+          <option value="3">6-10 years</option>
+          <option value="5">11-15 years</option>
+          <option value="7">15+ years</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>6. During market declines, I tend to sell portions of my riskier assets and invest the money in safer assets.</p>
+        <select id="q6">
+          <option value="">Select</option>
+          <option value="5">Strongly disagree</option>
+          <option value="4">Disagree</option>
+          <option value="3">Somewhat agree</option>
+          <option value="2">Agree</option>
+          <option value="1">Strongly agree</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>7. The chart shows the greatest 1-year loss and highest 1-year gain on 3 hypothetical investments of $10,000. I would invest in...</p>
+        <select id="q7">
+          <option value="">Select</option>
+          <option value="1">Investment A</option>
+          <option value="2">Investment B</option>
+          <option value="3">Investment C</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>8. From Sep-Oct 2008, bonds lost 4%. If I owned a bond that lost 4% in 2 months, I would...</p>
+        <select id="q8">
+          <option value="">Select</option>
+          <option value="1">Sell all</option>
+          <option value="2">Sell a portion</option>
+          <option value="3">Hold</option>
+          <option value="4">Buy more</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>9. I would invest in a mutual fund or ETF based solely on a brief conversation with a friend, co-worker, or relative.</p>
+        <select id="q9">
+          <option value="">Select</option>
+          <option value="5">Strongly disagree</option>
+          <option value="4">Disagree</option>
+          <option value="3">Somewhat agree</option>
+          <option value="2">Agree</option>
+          <option value="1">Strongly agree</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>10. From Sep-Nov 2008, stocks lost over 31%. If I owned a stock that lost 31% in 3 months, I would...</p>
+        <select id="q10">
+          <option value="">Select</option>
+          <option value="1">Sell all</option>
+          <option value="2">Sell a portion</option>
+          <option value="3">Hold</option>
+          <option value="4">Buy more</option>
+        </select>
+      </div>
+
+      <div class="question-card">
+        <p>11. Generally, I prefer an investment with little or no ups and downs, and I am willing to accept the lower returns.</p>
+        <select id="q11">
+          <option value="">Select</option>
+          <option value="5">Strongly disagree</option>
+          <option value="4">Disagree</option>
+          <option value="3">Somewhat agree</option>
+          <option value="2">Agree</option>
+          <option value="1">Strongly agree</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="submitRiskBtn">Submit & Show Results</button>
+      </div>
+
+      <div class="status-message" id="riskStatus"></div>
     </div>
 
     <div class="results-card hidden fade-in" id="resultsCard">
@@ -453,11 +607,16 @@
     let pendingCalculation = null;
 
     const calculateBtn = document.getElementById("calculateBtn");
-    const submitLeadBtn = document.getElementById("submitLeadBtn");
+    const continueToRiskBtn = document.getElementById("continueToRiskBtn");
+    const submitRiskBtn = document.getElementById("submitRiskBtn");
+
     const leadFormCard = document.getElementById("leadFormCard");
+    const riskFormCard = document.getElementById("riskFormCard");
     const resultsCard = document.getElementById("resultsCard");
+
     const calcStatus = document.getElementById("calcStatus");
     const formStatus = document.getElementById("formStatus");
+    const riskStatus = document.getElementById("riskStatus");
 
     calculateBtn.addEventListener("click", () => {
       calcStatus.textContent = "";
@@ -470,13 +629,14 @@
 
       pendingCalculation = calc;
       leadFormCard.classList.remove("hidden");
+      riskFormCard.classList.add("hidden");
       resultsCard.classList.add("hidden");
 
       leadFormCard.scrollIntoView({ behavior: "smooth", block: "start" });
       notifyParentHeight();
     });
 
-    submitLeadBtn.addEventListener("click", async () => {
+    continueToRiskBtn.addEventListener("click", () => {
       formStatus.textContent = "";
 
       if (!pendingCalculation) {
@@ -495,6 +655,45 @@
         return;
       }
 
+      riskFormCard.classList.remove("hidden");
+      riskFormCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      notifyParentHeight();
+    });
+
+    submitRiskBtn.addEventListener("click", async () => {
+      riskStatus.textContent = "";
+
+      if (!pendingCalculation) {
+        riskStatus.textContent = "Please complete the calculator first.";
+        return;
+      }
+
+      const riskAnswers = {
+        q1: document.getElementById("q1").value,
+        q2: document.getElementById("q2").value,
+        q3: document.getElementById("q3").value,
+        q4: document.getElementById("q4").value,
+        q5: document.getElementById("q5").value,
+        q6: document.getElementById("q6").value,
+        q7: document.getElementById("q7").value,
+        q8: document.getElementById("q8").value,
+        q9: document.getElementById("q9").value,
+        q10: document.getElementById("q10").value,
+        q11: document.getElementById("q11").value
+      };
+
+      const allAnswered = Object.values(riskAnswers).every(Boolean);
+      if (!allAnswered) {
+        riskStatus.textContent = "Please answer all risk questions.";
+        return;
+      }
+
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const country = document.getElementById("country").value;
+
       const payload = {
         firstName,
         lastName,
@@ -503,12 +702,13 @@
         country,
         countryCode: countryCodeMap[country] || "",
         inputs: pendingCalculation.inputs,
-        results: pendingCalculation.results
+        results: pendingCalculation.results,
+        riskAnswers
       };
 
       try {
-        submitLeadBtn.disabled = true;
-        submitLeadBtn.textContent = "Submitting...";
+        submitRiskBtn.disabled = true;
+        submitRiskBtn.textContent = "Submitting...";
 
         const resp = await fetch("/api/lead", {
           method: "POST",
@@ -521,12 +721,13 @@
         const data = await resp.json();
 
         if (!resp.ok || !data.success) {
-          formStatus.textContent = "Something went wrong while submitting the form.";
+          riskStatus.textContent = "Something went wrong while submitting.";
           console.error(data);
           return;
         }
 
         leadFormCard.classList.add("hidden");
+        riskFormCard.classList.add("hidden");
         resultsCard.classList.remove("hidden");
 
         renderResults(pendingCalculation.results, pendingCalculation.inputs);
@@ -536,10 +737,10 @@
         notifyParentHeight();
       } catch (error) {
         console.error(error);
-        formStatus.textContent = "Submission failed.";
+        riskStatus.textContent = "Submission failed.";
       } finally {
-        submitLeadBtn.disabled = false;
-        submitLeadBtn.textContent = "Submit & Show Results";
+        submitRiskBtn.disabled = false;
+        submitRiskBtn.textContent = "Submit & Show Results";
       }
     });
 
