@@ -16,7 +16,7 @@ export default async function handler(req, res) {
           attributes: {
             "str:cm:first-name": data.firstName || "",
             "str:cm:last-name": data.lastName || "",
-            "str:cm:email": data.email || "",
+            "str::email": data.email || "",
             "phn:cm:phone": { c: "", n: data.phone || "" },
             "str:cm:country": data.country || "",
             "str:cm:answers": "Investment Income Calculator"
