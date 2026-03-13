@@ -16,6 +16,26 @@ export default async function handler(req, res) {
 
     const countryCode = getCountryCode(data.country);
 
+    const compactAnswers = {
+      tool: "Investment Income Calculator",
+      in: {
+        y: data.inputs?.yieldPercent ?? null,
+        a: data.inputs?.investmentAmount ?? null,
+        i: data.inputs?.incomeValue ?? null,
+        p: data.inputs?.incomePeriod ?? null,
+        c: data.inputs?.compounding ?? null,
+        yrs: data.inputs?.years ?? null
+      },
+      out: {
+        ai: data.results?.annualIncome ?? null,
+        mi: data.results?.monthlyIncome ?? null,
+        sf: data.results?.solvedField ?? null,
+        tpv: data.results?.totalProjectedValue ?? null,
+        tie: data.results?.totalInterestEarned ?? null
+      },
+      risk: data.riskAnswers || {}
+    };
+
     const orttoBody = {
       activities: [
         {
@@ -26,25 +46,7 @@ export default async function handler(req, res) {
             "str:cm:email": data.email || "",
             "phn:cm:phone": { c: "", n: data.phone || "" },
             "str:cm:country": countryCode,
-            "str:cm:answers": JSON.stringify({
-  tool: "Investment Income Calculator",
-  in: {
-    y: data.inputs?.yieldPercent ?? null,
-    a: data.inputs?.investmentAmount ?? null,
-    i: data.inputs?.incomeValue ?? null,
-    p: data.inputs?.incomePeriod ?? null,
-    c: data.inputs?.compounding ?? null,
-    yrs: data.inputs?.years ?? null
-  },
-  out: {
-    ai: data.results?.annualIncome ?? null,
-    mi: data.results?.monthlyIncome ?? null,
-    sf: data.results?.solvedField ?? null,
-    tpv: data.results?.totalProjectedValue ?? null,
-    tie: data.results?.totalInterestEarned ?? null
-  },
-  risk: data.riskAnswers || {}
-})
+            "str:cm:answers": JSON.stringify(compactAnswers)
           },
           fields: {
             "str::email": data.email || ""
