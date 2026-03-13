@@ -12,23 +12,39 @@ export default async function handler(req, res) {
   }
 
   try {
-    const data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    // Parse body safely for Vercel
+    let body = req.body;
+
+    if (typeof body === "string") {
+      body = JSON.parse(body);
+    }
+
+    const email = body.email || "";
+    const firstName = body.firstName || "";
+    const lastName = body.lastName || "";
+    const phone = body.phone || "";
+    const country = body.country || "";
+
+    if (!email) {
+      return res.status(400).json({ error: "Email missing" });
+    }
 
     const orttoPayload = {
       activities: [
         {
-          // IMPORTANT: use the full activity key
           activity_id: "act:cm:website_form_submit",
 
           attributes: {
-            "str:cm:first-name": data.firstName || "",
-            "str:cm:last-name": data.lastName || "",
-            // standard email field so Ortto creates/updates the person
-            "str::email": data.email || "",
-            "phn:cm:phone": { c: "", n: data.phone || "" },
-            "str:cm:country": data.country || "",
-            // keep short to avoid Ortto length limits
-            "str:cm:answers": "Investment Income Calculator"
+            "str:cm:first-name": firstName,
+            "str:cm:last-name": lastName,
+            "str:cm:email": email,
+            "phn:cm:phone": { c: "", n: phone },
+            "str:cm:country": country,
+            "str:cm:answers": "Investment Calculator Lead"
+          },
+
+          fields: {
+            "str::email": email
           },
 
           location: {
@@ -40,28 +56,34 @@ export default async function handler(req, res) {
           }
         }
       ],
+
       merge_by: ["str::email"]
     };
 
-    const resp = await fetch("https://api.eu.ap3api.com/v1/activities/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": process.env.ORTTO_API_KEY
-      },
-      body: JSON.stringify(orttoPayload)
-    });
+    const response = await fetch(
+      "https://api.eu.ap3api.com/v1/activities/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": process.env.ORTTO_API_KEY
+        },
+        body: JSON.stringify(orttoPayload)
+      }
+    );
 
-    const text = await resp.text();
+    const text = await response.text();
 
-    if (!resp.ok) {
+    if (!response.ok) {
       console.error("Ortto error:", text);
       return res.status(500).json({ error: text });
     }
 
+    console.log("Sent to Ortto:", text);
+
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.error("API error:", err);
+    console.error("Server error:", err);
     return res.status(500).json({ error: err.message });
   }
 }
