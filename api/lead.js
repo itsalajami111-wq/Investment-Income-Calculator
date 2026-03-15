@@ -46,13 +46,12 @@ export default async function handler(req, res) {
             "str:cm:last-name": lastName,
             "str:cm:lead-source": "investment-calculator",
             "str:cm:answers": [
-              `Tool: Investment Income Calculator`,
-              `Yield: ${data.inputs?.yieldPercent ?? ""}%`,
-              `Investment: ${data.inputs?.investmentAmount ?? ""}`,
-              `Income: ${data.results?.annualIncome ?? ""}`,
-              `Projected: ${data.results?.totalProjectedValue ?? ""}`,
-              `Risk score answers: ${Object.values(data.riskAnswers || {}).join(",")}`
-            ].join(" | ").slice(0, 500)
+    `Yield:${data.inputs?.yieldPercent ?? ""}%`,
+    `Amount:${data.inputs?.investmentAmount ?? ""}`,
+    `Income:${data.results?.annualIncome ?? ""}`,
+    `Projected:${data.results?.totalProjectedValue ?? ""}`,
+    `Risk:${Object.values(data.riskAnswers || {}).join(",")}`
+  ].join(" | ").slice(0, 300)
           },
           fields: {
             "str::email": email
@@ -62,6 +61,8 @@ export default async function handler(req, res) {
       merge_by: ["str::email"]
     };
 
+    console.log("USING SHORT ANSWERS VERSION");
+    console.log(orttoBody.activities[0].attributes["str:cm:answers"]);
     const response = await fetch("https://api.eu.ap3api.com/v1/activities/create", {
       method: "POST",
       headers: {
