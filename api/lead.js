@@ -45,14 +45,14 @@ export default async function handler(req, res) {
           activity_id: "act:cm:website_form_submit",
           attributes: {
             "phn:cm:phone-number": {
-              c: phoneParsed.countryCodeDigits,
-              n: phoneParsed.numberDigits
+             c: phoneParsed.countryCodeDigits,
+             n: phoneParsed.numberDigits
             },
             "str:cm:country-of-residence": countryCode,
             "str:cm:email": email,
             "str:cm:first-name": firstName,
             "str:cm:last-name": lastName,
-            "str:cm:answers": JSON.stringify(answersPayload).slice(0, 1000)
+            "str:cm:answers": "Investment Income Calculator submitted"
           },
           fields: {
             "str::email": email
