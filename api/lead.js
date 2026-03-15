@@ -45,12 +45,14 @@ export default async function handler(req, res) {
             "str:cm:first-name": firstName,
             "str:cm:last-name": lastName,
             "str:cm:lead-source": "investment-calculator",
-            "str:cm:answers": JSON.stringify({
-              tool: "Investment Income Calculator",
-              calculatorInputs: data.inputs || {},
-              calculatorResults: data.results || {},
-              riskAnswers: data.riskAnswers || {}
-            })
+            "str:cm:answers": [
+              `Tool: Investment Income Calculator`,
+              `Yield: ${data.inputs?.yieldPercent ?? ""}%`,
+              `Investment: ${data.inputs?.investmentAmount ?? ""}`,
+              `Income: ${data.results?.annualIncome ?? ""}`,
+              `Projected: ${data.results?.totalProjectedValue ?? ""}`,
+              `Risk score answers: ${Object.values(data.riskAnswers || {}).join(",")}`
+            ].join(" | ").slice(0, 500)
           },
           fields: {
             "str::email": email
