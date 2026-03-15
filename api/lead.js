@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     const orttoBody = {
       activities: [
         {
-          activity_id: "calculator_form_submit",
+          activity_id: "act:cm:investment-calculator-form-submitted",
           attributes: {
             "phn:cm:phone-number": {
              c: phoneParsed.countryCodeDigits,
