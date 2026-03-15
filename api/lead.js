@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== "POST") {
-    return res.status(200).json({ success: true });
+    return res.status(405).json({ success: false, error: "Method not allowed" });
   }
 
   try {
@@ -21,23 +21,15 @@ export default async function handler(req, res) {
     const phoneFull = String(data.phone || "").trim();
 
     if (!firstName || !lastName || !email || !countryName) {
-      return res.status(400).json({ ok: false, error: "Missing required fields" });
+      return res.status(400).json({ success: false, error: "Missing required fields" });
     }
 
     if (!email.includes("@") || email.length > 254) {
-      return res.status(400).json({ ok: false, error: "Invalid email" });
+      return res.status(400).json({ success: false, error: "Invalid email" });
     }
 
     const countryCode = getCountryCode(countryName);
-
     const phoneParsed = splitPhone(phoneFull);
-
-    const answersPayload = {
-      tool: "Investment Income Calculator",
-      calculatorInputs: data.inputs || {},
-      calculatorResults: data.results || {},
-      riskAnswers: data.riskAnswers || {}
-    };
 
     const orttoBody = {
       activities: [
@@ -45,14 +37,20 @@ export default async function handler(req, res) {
           activity_id: "act:cm:investment-calculator-form-submitted",
           attributes: {
             "phn:cm:phone-number": {
-             c: phoneParsed.countryCodeDigits,
-             n: phoneParsed.numberDigits
+              c: phoneParsed.countryCodeDigits,
+              n: phoneParsed.numberDigits
             },
             "str:cm:country-of-residence": countryCode,
             "str:cm:email": email,
             "str:cm:first-name": firstName,
             "str:cm:last-name": lastName,
-            "str:cm:answers": "Investment Income Calculator submitted"
+            "str:cm:lead-source": "investment-calculator",
+            "str:cm:answers": JSON.stringify({
+              tool: "Investment Income Calculator",
+              calculatorInputs: data.inputs || {},
+              calculatorResults: data.results || {},
+              riskAnswers: data.riskAnswers || {}
+            })
           },
           fields: {
             "str::email": email
@@ -75,14 +73,14 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       console.error("Ortto error:", text);
-      return res.status(502).json({ ok: false, error: text });
+      return res.status(502).json({ success: false, error: text });
     }
 
-    return res.status(200).json({ ok: true });
+    return res.status(200).json({ success: true });
   } catch (error) {
     console.error("Server error:", error);
     return res.status(500).json({
-      ok: false,
+      success: false,
       error: error instanceof Error ? error.message : String(error)
     });
   }
@@ -95,19 +93,11 @@ function splitPhone(phone) {
     return { countryCodeDigits: "", numberDigits: "" };
   }
 
-  if (cleaned.startsWith("+")) {
-    const digits = cleaned.slice(1);
-    if (digits.length <= 4) {
-      return { countryCodeDigits: digits, numberDigits: "" };
-    }
-
-    // simple practical split for your current use
-    const countryCodeDigits = digits.slice(0, 3);
-    const numberDigits = digits.slice(3);
-    return { countryCodeDigits, numberDigits };
+  if (cleaned.startsWith("+971")) {
+    return { countryCodeDigits: "971", numberDigits: cleaned.slice(4) };
   }
 
-  return { countryCodeDigits: "", numberDigits: cleaned };
+  return { countryCodeDigits: "", numberDigits: cleaned.replace(/\D/g, "") };
 }
 
 function getCountryCode(name) {
