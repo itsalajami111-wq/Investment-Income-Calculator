@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -31,27 +31,30 @@ export default async function handler(req, res) {
     const countryCode = getCountryCode(countryName);
     const phoneParsed = splitPhone(phoneFull);
 
+    const shortAnswers = [
+      `Yield:${data.inputs?.yieldPercent ?? ""}%`,
+      `Amount:${data.inputs?.investmentAmount ?? ""}`,
+      `Income:${data.results?.annualIncome ?? ""}`,
+      `Projected:${data.results?.totalProjectedValue ?? ""}`,
+      `Risk:${Object.values(data.riskAnswers || {}).join(",")}`
+    ].join(" | ").slice(0, 300);
+
     const orttoBody = {
       activities: [
         {
-          activity_id: "act:cm:websiteformsubmit"
+          activity_id: "act:cm:websiteformsubmit",
           attributes: {
-            "phn:cm:phone-number": {
+            "phn:cm:mobile-number-user-input": {
               c: phoneParsed.countryCodeDigits,
               n: phoneParsed.numberDigits
             },
-            "str:cm:country-of-residence": countryCode,
+            "str:cm:country-of-residence-user-input": countryCode,
             "str:cm:email": email,
-            "str:cm:first-name": firstName,
-            "str:cm:last-name": lastName,
-            "str:cm:lead-source": "investment-calculator",
-            "str:cm:answers": [
-    `Yield:${data.inputs?.yieldPercent ?? ""}%`,
-    `Amount:${data.inputs?.investmentAmount ?? ""}`,
-    `Income:${data.results?.annualIncome ?? ""}`,
-    `Projected:${data.results?.totalProjectedValue ?? ""}`,
-    `Risk:${Object.values(data.riskAnswers || {}).join(",")}`
-  ].join(" | ").slice(0, 300)
+            "str:cm:first-name-user-input": firstName,
+            "str:cm:last-name-user-input": lastName,
+            "str:cm:your-questions-user-input-on-the-event-forms": shortAnswers,
+            "str:cm:topic-page-title": "Investment Income Calculator",
+            "str:cm:source-page-url": "investment-income-calculator"
           },
           fields: {
             "str::email": email
@@ -61,8 +64,9 @@ export default async function handler(req, res) {
       merge_by: ["str::email"]
     };
 
-    console.log("USING SHORT ANSWERS VERSION");
-    console.log(orttoBody.activities[0].attributes["str:cm:answers"]);
+    console.log("USING CORRECT ORTTO ACTIVITY");
+    console.log(JSON.stringify(orttoBody, null, 2));
+
     const response = await fetch("https://api.eu.ap3api.com/v1/activities/create", {
       method: "POST",
       headers: {
@@ -84,10 +88,10 @@ export default async function handler(req, res) {
     console.error("Server error:", error);
     return res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : String(error)
+      error: error.message || String(error)
     });
   }
-}
+};
 
 function splitPhone(phone) {
   const cleaned = phone.replace(/[^\d+]/g, "");
@@ -96,8 +100,22 @@ function splitPhone(phone) {
     return { countryCodeDigits: "", numberDigits: "" };
   }
 
-  if (cleaned.startsWith("+971")) {
-    return { countryCodeDigits: "971", numberDigits: cleaned.slice(4) };
+  if (cleaned.startsWith("+")) {
+    const digits = cleaned.slice(1);
+
+    if (digits.startsWith("971")) {
+      return { countryCodeDigits: "971", numberDigits: digits.slice(3) };
+    }
+
+    if (digits.startsWith("44")) {
+      return { countryCodeDigits: "44", numberDigits: digits.slice(2) };
+    }
+
+    if (digits.startsWith("1")) {
+      return { countryCodeDigits: "1", numberDigits: digits.slice(1) };
+    }
+
+    return { countryCodeDigits: "", numberDigits: digits };
   }
 
   return { countryCodeDigits: "", numberDigits: cleaned.replace(/\D/g, "") };
