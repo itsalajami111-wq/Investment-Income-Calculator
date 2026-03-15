@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     const orttoBody = {
       activities: [
         {
-          activity_id: "website_form_submit",
+          activity_id: "act:cm:websiteformsubmit"
           attributes: {
             "phn:cm:phone-number": {
               c: phoneParsed.countryCodeDigits,
